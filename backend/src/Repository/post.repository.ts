@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 import { PostCreateCriteria } from '../interface/postCreateCriteria.interface';
 import { PostSearchCriteria } from '../interface/postSearchCriteria.interface';
 import { PostUpdateCriteria } from '../interface/postUpdateCriteria.interface';

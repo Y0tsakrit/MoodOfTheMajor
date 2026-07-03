@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 import { ProfileCreateCriteria } from '../interface/profileCreateCriteria.interface';
 import { ProfileSearchCriteria } from '../interface/profileSearchCriteria.interface';
 import { ProfileUpdateCriteria } from '../interface/profileUpdateCriteria.interface';

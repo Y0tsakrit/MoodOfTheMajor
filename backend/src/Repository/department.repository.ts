@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 import { DepartmentCreateCriteria } from '../interface/departmentCreateCriteria.interface';
 import { DepartmentSearchCriteria } from '../interface/departmentSearchCriteria.interface';
 const prisma = new PrismaClient();
 
 
-const departmentRepository = {
+export const departmentRepository = {
     async CreateDepartment(data: DepartmentCreateCriteria) {
         return await prisma.department.create({
             data: data
