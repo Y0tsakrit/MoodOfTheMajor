@@ -38,11 +38,13 @@ export const profileRepository = {
             whereClause.year = filter.year;
         }
 
-        whereClause.page = filter.page;
-        whereClause.limit = filter.limit;
+        const page = Number(filter.page) || 1;
+        const limit = Number(filter.limit) || 10;
 
         return await prisma.profile.findMany({
-            where: whereClause
+            where: whereClause,
+            skip: (page - 1) * limit,
+            take: limit
         });
     },
 

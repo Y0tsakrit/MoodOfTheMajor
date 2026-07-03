@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { DepartmentCreateCriteria } from '../interface/departmentCreateCriteria.interface';
-
+import { DepartmentSearchCriteria } from '../interface/departmentSearchCriteria.interface';
 const prisma = new PrismaClient();
 
 
@@ -11,18 +11,23 @@ const departmentRepository = {
         });
     },
 
-    async SearchByCriteria(filter: any) {
-        return await prisma.department.findMany({
-            where: filter
-        });
-    },
+    async SearchByCriteria(filter: DepartmentSearchCriteria) {
+        const whereClause: any = {};
 
-    async UpdateDepartment(id: string, data: any) {
-        return await prisma.department.update({
-            where: {
-                id: id
-            },
-            data: data
+        if (filter.id) {
+            whereClause.id = filter.id;
+        }
+
+        if (filter.faculty) {
+            whereClause.faculty = filter.faculty;
+        }
+
+        if (filter.major) {
+            whereClause.major = filter.major;
+        }
+        
+        return await prisma.department.findMany({
+            where: whereClause
         });
     },
 }
