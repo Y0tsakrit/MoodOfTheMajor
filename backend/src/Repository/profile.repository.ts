@@ -50,11 +50,27 @@ export const profileRepository = {
 
     async UpdateProfile(id: string, data: ProfileUpdateCriteria) {
 
+        const { departmentId, updatedAt, ...profileData } = data;
+
+        const prismaData = {
+            ...profileData,
+            ...(departmentId ? {
+                Department: {
+                    connect: {
+                        id: departmentId
+                    }
+                }
+            } : {}),
+            ...(updatedAt ? {
+                UpdatedAt: updatedAt
+            } : {}),
+        };
+
         return await prisma.profile.update({
             where: {
                 id: id
             },
-            data: data
+            data: prismaData
         });
     },
 }
