@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRoutes from './src/routes/auth.routes';
 import indexRoutes from './src/routes/index.routes';
 import profileRoutes from './src/routes/profile.route';
+import departmentRoutes from './src/routes/department.route';
 
 const app = express();
 
@@ -12,10 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
+app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
-app.use('/', indexRoutes);
+app.use('/department', departmentRoutes);
+
 
 app.listen(8443, () => {
     console.log('Server running on port 8443');

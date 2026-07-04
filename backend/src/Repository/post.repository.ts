@@ -43,6 +43,9 @@ export const postRepository = {
 
         return await prisma.post.findMany({
             where: whereClause,
+            orderBy: {
+                UpdatedAt: 'desc'
+            },
             skip: (page - 1) * limit,
             take: limit
         });

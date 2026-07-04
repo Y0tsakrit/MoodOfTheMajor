@@ -23,11 +23,17 @@ export const profileRepository = {
         }
 
         if (filter.firstName) {
-            whereClause.firstName = filter.firstName;
+            whereClause.firstName = {
+                contains: filter.firstName,
+                mode: 'insensitive'
+            };
         }
 
-        if (filter.lastName) {
-            whereClause.lastName = filter.lastName;
+       if (filter.lastName) {
+            whereClause.lastName = {
+                contains: filter.lastName,
+                mode: 'insensitive'
+            };
         }
 
         if (filter.departmentId) {
@@ -43,6 +49,9 @@ export const profileRepository = {
 
         return await prisma.profile.findMany({
             where: whereClause,
+            orderBy: {
+                UpdatedAt: 'desc'
+            },
             skip: (page - 1) * limit,
             take: limit
         });

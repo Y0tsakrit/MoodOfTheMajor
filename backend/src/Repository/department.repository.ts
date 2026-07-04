@@ -19,15 +19,29 @@ export const departmentRepository = {
         }
 
         if (filter.faculty) {
-            whereClause.faculty = filter.faculty;
+            whereClause.faculty = {
+                contains: filter.faculty,
+                mode: 'insensitive'
+            };
         }
 
         if (filter.major) {
-            whereClause.major = filter.major;
+            whereClause.major = {
+                contains: filter.major,
+                mode: 'insensitive'
+            };
         }
+
+        const page = Number(filter.page) || 1;
+        const limit = Number(filter.limit) || 10;
         
         return await prisma.department.findMany({
-            where: whereClause
+            where: whereClause,
+            orderBy: {
+                UpdatedAt: 'desc'
+            },
+            skip: (page - 1) * limit,
+            take: limit
         });
     },
 }
