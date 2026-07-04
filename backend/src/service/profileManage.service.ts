@@ -24,21 +24,10 @@ export default class ProfileManageService {
         throw new Error("Profile not found");
     }
 
-    let departmentId: string | null = null;
-
-    if (data.department) {
-        const department = await this.departmentRepository.SearchByCriteria(data.department);
-        if (department[0]) {
-            departmentId = department[0].id;
-        }else{
-            throw new Error("Department not found");
-        }
-    }
-
     const updatedProfileData: ProfileUpdateCriteria = {
         firstName: data.firstName || profile[0].firstName,
         lastName: data.lastName || profile[0].lastName,
-        departmentId: departmentId !== null ? departmentId : profile[0].departmentId,
+        departmentId: data.departmentId !== null && data.departmentId !== undefined ? data.departmentId : profile[0].departmentId,
         year: data.year ? data.year : profile[0].year,
         updatedAt: new Date(),
     };
