@@ -21,3 +21,13 @@ export const login = async (req: Request, res: Response) => {
         return res.status(401).json({ message: error.message });
     }
 };
+
+export const refreshToken = async (req: Request, res: Response) => {
+    try {
+        const { refreshToken } = req.body;
+        const result = await authService.refreshAccessToken(refreshToken);
+        return res.json(result);
+    } catch (error: any) {
+        return res.status(401).json({ message: error.message });
+    }
+};
