@@ -17,7 +17,7 @@ export const postRepository = {
 
         const whereClause: any = {};
 
-        whereClause.DeletedAt = null;
+        whereClause.isDeleted = false;
 
         if (filter.id) {
             whereClause.id = filter.id;
@@ -37,7 +37,7 @@ export const postRepository = {
         if (filter.isAnonymous !== undefined) {
             whereClause.isAnonymous = filter.isAnonymous;
         }
-        
+
         const page = Number(filter.page) || 1;
         const limit = Number(filter.limit) || 10;
 

@@ -3,4 +3,5 @@ export interface PostUpdateCriteria {
     "content"?: string;
     "mood"?: string;
     "isAnonymous"?: boolean;
+    "UpdatedAt"?: Date;
 }
