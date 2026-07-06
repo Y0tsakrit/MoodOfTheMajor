@@ -66,6 +66,7 @@ export const postRepository = {
                 id: id
             },
             data: {
+                isDeleted: true,
                 DeletedAt: new Date()
             }
         });

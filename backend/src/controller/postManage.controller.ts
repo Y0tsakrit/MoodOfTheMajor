@@ -30,3 +30,16 @@ export const updatePost = async (req: any, res: any) => {
         res.status(500).json({ error: message });
     }
 };
+
+export const deletePost = async (req: any, res: any) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    const postId = req.params.postId;
+
+    try {
+        const result = await postService.deletePost(token, postId);
+        res.status(200).json(result);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        res.status(500).json({ error: message });
+    }
+};

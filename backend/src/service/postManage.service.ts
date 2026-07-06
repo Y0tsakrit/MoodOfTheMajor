@@ -55,6 +55,23 @@ export default class PostManagementService {
         }
     }
 
+    async deletePost(token: string, postId: string) {
+        const tokenData: TokenData = extractDataFromToken(token);
+
+        const existingPost = await this.postRepository.SearchByCriteria({ id: postId });
+        if (existingPost.length === 0 || !existingPost[0]) {
+            throw new Error('Post not found');
+        }
+
+        await this.verifyOwenerOrAdmin(tokenData, postId);
+
+        try {
+            await this.postRepository.DeletePost(postId);
+            return { message: 'Post deleted successfully' };
+        } catch (error) {
+            throw new Error('Failed to delete post');
+        }
+    }
 
     async verifyOwenerOrAdmin(tokenData: TokenData, postId: string) {
 
