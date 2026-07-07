@@ -1,6 +1,6 @@
 export interface UserSearchCriteria {
-    "id"?:String | null;
-    "email"?:String | null;
-    "isAdmin"?:Boolean | null;
-    "profileId"?:String | null;
+    "id"?:string | null;
+    "email"?:string | null;
+    "isAdmin"?:boolean | null;
+    "profileId"?:string | null;
 }
