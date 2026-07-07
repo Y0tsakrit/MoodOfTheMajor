@@ -21,6 +21,8 @@ app.use('/department', departmentRoutes);
 
 app.use('/post', postRoutes);
 
-app.listen(8443, () => {
-    console.log('Server running on port 8443');
+
+const PORT = process.env.PORT || 8443;
+app.listen(Number(PORT), '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
 });
