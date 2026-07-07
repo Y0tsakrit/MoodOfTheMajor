@@ -43,3 +43,14 @@ export const deletePost = async (req: any, res: any) => {
         res.status(500).json({ error: message });
     }
 };
+
+export const getPost = async (req: any, res: any) => {
+    const searchCriteria = req.query;
+    try {
+        const posts = await postService.getPost(searchCriteria);
+        res.status(200).json(posts);
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        res.status(500).json({ error: message });
+    }
+};
