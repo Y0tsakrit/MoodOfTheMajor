@@ -23,16 +23,25 @@ export const postRepository = {
             whereClause.id = filter.id;
         }
         if (filter.title) {
-            whereClause.title = filter.title;
+            whereClause.title = { 
+                contains: filter.title,
+                mode: 'insensitive'
+            };
         }
         if (filter.content) {
-            whereClause.content = filter.content;
+            whereClause.content = { 
+                contains: filter.content,
+                mode: 'insensitive'
+            };
         }
         if (filter.authorId) {
             whereClause.authorId = filter.authorId;
         }
         if (filter.mood) {
-            whereClause.mood = filter.mood;
+            whereClause.mood = { 
+                contains: filter.mood,
+                mode: 'insensitive' 
+            };
         }
         if (filter.isAnonymous !== undefined) {
             whereClause.isAnonymous = filter.isAnonymous;
