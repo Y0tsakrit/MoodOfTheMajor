@@ -28,6 +28,7 @@ function LoginPage() {
       const result = await login(data.email, data.password);
       const accessToken = result.accessToken;
       
+      localStorage.setItem('refreshToken', result.refreshToken);
       injectTokenPointer(accessToken);
       setAccessToken(accessToken);
       

@@ -4,13 +4,15 @@ import RegisterPage from './page/register/registerPage';
 import { AuthProvider } from './components/AuthContext'; 
 import PublicRoute from './components/publicRoute';
 
+function DashboardPage() {
+  return <div style={{ padding: '20px' }}><h1>Dashboard Home</h1></div>;
+}
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Routes>
           <Route 
             path="/login" 
             element={
@@ -27,8 +29,7 @@ export default function App() {
               </PublicRoute>
             } 
           />
-          <Route path="/"/>
-        </Routes>
+          <Route path="/" element={<DashboardPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

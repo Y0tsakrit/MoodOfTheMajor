@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { injectTokenPointer } from '../utils/api'; 
 
-
 interface AuthContextType {
   accessToken: string | null;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
@@ -22,18 +21,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+
+        if (!storedRefreshToken) {
+          setLoading(false);
+          return;
+        }
+
         const response = await axios.post(
           `${import.meta.env.VITE_URL_API}/auth/refresh`, 
-          {}, 
-          { withCredentials: true }
+          {
+            refreshToken: storedRefreshToken
+          }
         );
         
         const token = response.data.accessToken;
         setAccessToken(token);
-
         injectTokenPointer(token);
       } catch (error) {
         console.error("Session expired or user not logged in");
+        localStorage.removeItem('refreshToken');
       } finally {
         setLoading(false);
       }

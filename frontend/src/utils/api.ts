@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_URL_API,
-  withCredentials: true,
 });
 
 let currentToken: string | null = null;
@@ -30,10 +29,17 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+
+        if (!storedRefreshToken) {
+          throw new Error("No refresh token available");
+        }
+
         const response = await axios.post(
           `${import.meta.env.VITE_URL_API}/auth/refresh`,
-          {},
-          { withCredentials: true }
+          {
+            refreshToken: storedRefreshToken
+          }
         );
 
         const newAccessToken = response.data.accessToken;
@@ -44,6 +50,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         injectTokenPointer(null);
+        localStorage.removeItem('refreshToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

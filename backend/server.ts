@@ -11,8 +11,13 @@ import postRoutes from './src/routes/post.route';
 const app = express();
 
 
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
+
 app.use(express.json());
-app.use(cors());
+
 
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
