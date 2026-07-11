@@ -1,7 +1,6 @@
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
 
-// Define the interface for props to ensure type safety
 interface SearchDropdownProps {
   placeholder: string;
   options: { value: string | number; label: string }[];
