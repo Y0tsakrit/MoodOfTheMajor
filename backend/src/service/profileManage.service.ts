@@ -35,7 +35,7 @@ export default class ProfileManageService {
         await this.profileRepository.UpdateProfile(profileId, updatedProfileData);
     }
 
-    async getProfile(criteria: ProfileSearchCriteria) {
+    async getProfile(criteria: ProfileSearchCriteria, isAdmin: boolean = false) {
         try {
             const profiles = await this.profileRepository.SearchByCriteria(criteria);
             const totalProfiles = await Promise.all(profiles.map(async (profile) => {
@@ -45,7 +45,8 @@ export default class ProfileManageService {
                     firstName: profile.firstName,
                     lastName: profile.lastName,
                     year: profile.year,
-                    department: department[0] || null
+                    department: department[0] || null,
+                    isAdmin: isAdmin
                 };
             }));
             return totalProfiles;

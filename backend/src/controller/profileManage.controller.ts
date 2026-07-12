@@ -50,7 +50,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
         const decoded = jsonwebtoken.decode(token) as any;
 
-        criteria = { id: decoded?.profileId };
+        criteria = { id: decoded?.profileId, isAdmin: decoded?.isAdmin };
     }
 
     try {
