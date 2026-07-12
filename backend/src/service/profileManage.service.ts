@@ -37,7 +37,18 @@ export default class ProfileManageService {
 
     async getProfile(criteria: ProfileSearchCriteria) {
         try {
-            return await this.profileRepository.SearchByCriteria(criteria);
+            const profiles = await this.profileRepository.SearchByCriteria(criteria);
+            const totalProfiles = await Promise.all(profiles.map(async (profile) => {
+                const department = await this.departmentRepository.SearchByCriteria({ id: profile.departmentId });
+                return {
+                    id: profile.id,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
+                    year: profile.year,
+                    department: department[0] || null
+                };
+            }));
+            return totalProfiles;
         } catch (error) {
             throw new Error("Error occurred while fetching profile");
         }
