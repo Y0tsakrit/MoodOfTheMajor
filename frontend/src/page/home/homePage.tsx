@@ -12,7 +12,6 @@ function  HomePage() {
       try {
         if (accessToken) {
           const data = await getProfile({}, accessToken);
-          console.log("Fetched profiles:", data);
           setProfiles(data);
         }
       } catch (error) {
