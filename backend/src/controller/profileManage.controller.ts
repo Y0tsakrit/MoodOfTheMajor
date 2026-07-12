@@ -32,6 +32,18 @@ export const updateProfile = async (req: Request, res: Response) => {
     }
 };
 
+export const getProfile = async (req: Request, res: Response) => {
+    const criteria = req.query;
+    try{
+        const profiles = await profileManageService.getProfile(criteria as any);
+        res.status(200).json(profiles);
+    }catch (error) {
+        res.status(400).json({
+            error: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
+}
+
 const getDepartmentOrCreate = async (criteria: DepartmentCreateDTO, res: Response): Promise<string | null> => {
     if (!criteria.faculty || !criteria.major) {
         res.status(400).json({ error: 'Faculty and Major are required' });

@@ -2,6 +2,7 @@ import { profileRepository } from "../Repository/profile.repository";
 import { departmentRepository } from "../Repository/department.repository";
 import { UpdateProfileDTO } from "../interface/updateProfileDTO.interface";
 import { ProfileUpdateCriteria } from "../interface/profileUpdateCriteria.interface";
+import { ProfileSearchCriteria } from "../interface/profileSearchCriteria.interface";
 
 
 export default class ProfileManageService {
@@ -30,8 +31,15 @@ export default class ProfileManageService {
         departmentId: data.departmentId !== null && data.departmentId !== undefined ? data.departmentId : profile[0].departmentId,
         year: data.year ? data.year : profile[0].year,
         updatedAt: new Date(),
-    };
-
+};
         await this.profileRepository.UpdateProfile(profileId, updatedProfileData);
+    }
+
+    async getProfile(criteria: ProfileSearchCriteria) {
+        try {
+            return await this.profileRepository.SearchByCriteria(criteria);
+        } catch (error) {
+            throw new Error("Error occurred while fetching profile");
+        }
     }
 }
