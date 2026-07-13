@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { login } from './action';
 import { injectTokenPointer } from '../../utils/api';
-import { useAuth } from '../../components/AuthContext';
+import { useAuth } from '../../components/authContext';
 import Notification from '../../components/notification';
 
 function LoginPage() {
