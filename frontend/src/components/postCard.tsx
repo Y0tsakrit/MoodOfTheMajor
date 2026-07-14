@@ -27,12 +27,13 @@ export default function PostCard({ post, index }: PostCardProps) {
     >
       <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-2 sm:gap-4">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="max-w-[180px] sm:max-w-none font-semibold text-zinc-200 text-sm truncate">
-            {post.author?.firstName || "Anonymous"} {post.author?.lastName || "User"}
-          </span>
-          <span className="text-zinc-500 text-xs shrink-0">
+          <div className="flex flex-row gap-1 max-w-[180px] sm:max-w-none font-semibold text-zinc-200 text-sm truncate">
+            <div>{post.author?.firstName || "Anonymous"}</div>
+            <div>{post.author?.lastName || "User"}</div>
+          </div>
+          <div className="text-zinc-500 text-xs shrink-0">
             (Year {post.author?.year || "?"} - {post.major ? post.major.toUpperCase() : "GENERAL"})
-          </span>
+          </div>
         </div>
         <span className="self-start sm:self-auto bg-zinc-800 px-2 py-0.5 rounded font-semibold text-white text-xs shrink-0">
           {post.postMood}

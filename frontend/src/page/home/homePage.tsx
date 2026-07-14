@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBar from '../../components/navBar';
 import PostList from '../../components/postList';
-import { getProfile, getPost } from './action'; // Removed unused createPost import
+import { getProfile, getPost } from './action';
 import { useAuth } from "../../components/authContext";
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import Notification from '../../components/notification';

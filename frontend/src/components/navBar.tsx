@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Search, Shield, Smile, LogOut, Settings } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // 1. Imported the router navigation controller hook
+import { useNavigate } from 'react-router-dom';
 import CreatePostModal from './createPostModal'; 
 import { createPost } from '../page/home/action'; 
 import { useAuth } from "../components/authContext";
@@ -74,11 +74,12 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
       initial: data?.firstName ? data.firstName.charAt(0).toUpperCase() : 'F'
     };
 
+    // Added explicit path properties to the navigation configuration array
     const navItems = [
-      { icon: Home, label: 'Home', active: true },
-      { icon: Search, label: 'Explore', active: false },
-      ...(data?.isAdmin ? [{ icon: Shield, label: 'Moderation', active: false }] : []),
-      { icon: Settings, label: 'Settings', active: false },
+      { icon: Home, label: 'Home', active: true, path: '/' },
+      { icon: Search, label: 'Explore', active: false, path: '/explore' },
+      ...(data?.isAdmin ? [{ icon: Shield, label: 'Moderation', active: false, path: '/moderation' }] : []),
+      { icon: Settings, label: 'Settings', active: false, path: '/settings' },
     ];
 
     return (
@@ -99,6 +100,7 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
               return (
                 <button
                   key={index}
+                  onClick={() => navigate(item.path)}
                   className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-300 ${
                     item.active 
                       ? 'bg-zinc-800 text-white font-medium shadow-md' 
@@ -125,20 +127,24 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
           <div className={`flex items-center justify-between pt-4 border-t border-zinc-900 ${isCollapsed ? 'justify-center' : ''}`}>
             <div className="flex items-center gap-3 min-w-0">
               <button 
-                onClick={isCollapsed ? handleLogout : undefined}
-                title={isCollapsed ? "Log Out" : undefined}
-                className={`flex justify-center items-center bg-zinc-800 rounded-full w-10 h-10 font-bold text-zinc-300 shrink-0 ${isCollapsed ? 'hover:bg-red-950/30 hover:text-red-400 border border-transparent hover:border-red-900/50 transition-colors' : ''}`}
+                onClick={() => navigate('/my-account')}
+                title="My Account"
+                className="flex justify-center items-center bg-zinc-800 hover:bg-zinc-700 border border-transparent rounded-full w-10 h-10 font-bold text-zinc-300 hover:text-white transition-colors shrink-0"
               >
-                {isCollapsed ? <LogOut size={18} /> : user.initial}
+                {user.initial}
               </button>
-              
               {!isCollapsed && (
-                <div className="flex flex-col items-start min-w-0">
-                  <span className="w-28 font-semibold text-white text-sm text-left truncate">{user.name}</span>
+                <button 
+                  onClick={() => navigate('/my-account')}
+                  className="group flex flex-col items-start hover:opacity-80 focus:outline-none min-w-0 transition-opacity"
+                  title="View Account Profile"
+                >
+                  <span className="w-28 font-semibold text-white text-sm text-left group-hover:underline truncate">{user.name}</span>
                   <span className="w-28 text-zinc-500 text-xs text-left truncate">{user.major}</span>
-                </div>
+                </button>
               )}
             </div>
+            
             {!isCollapsed && (
               <button 
                 onClick={handleLogout}

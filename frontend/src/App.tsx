@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PublicRoute from './components/publicRoute';
 import PrivateRoute from './components/privateRoute';
 import HomePage from './page/home/homePage';
+import MyAccount from './page/myAccount/myAccountPage';
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,14 @@ function AppRoutes() {
           element={
             <PrivateRoute>
               <HomePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/my-account" 
+          element={
+            <PrivateRoute>
+              <MyAccount />
             </PrivateRoute>
           } 
         />
