@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import NavBar from '../../components/navBar';
 import PostList from '../../components/postList';
 import CreatePostModal from '../../components/createPostModal';
-import { getProfile, getPost } from './action';
+import { getProfile, getPost, createPost } from './action';
 import { useAuth } from "../../components/authContext";
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import Notification from '../../components/notification';
@@ -44,10 +44,8 @@ function HomePage() {
 
   const handlePostSubmit = async (formData: { title: string; content: string; mood: string; isAnonymous: boolean }) => {
     try {
-      // console.log("Submitting custom payload to backend service architecture:", formData);
-
+      await createPost(formData, accessToken!);
       queryClient.invalidateQueries({ queryKey: ['posts'] });
-
     } catch (error) {
       setNotification({
         show: true,
@@ -67,19 +65,15 @@ function HomePage() {
         data={profiles?.[0] || null} 
         onShareMoodClick={() => setIsModalOpen(true)} 
       />
-      
       <PostList 
         posts={posts} 
         fetchMorePosts={fetchNextPage} 
         hasMore={!!hasNextPage} 
       />
-      
       <div className="hidden lg:block p-6 border-zinc-800 border-l">
         <h3 className="mb-4 font-bold text-zinc-400 text-xs uppercase tracking-wider">Trending Topics</h3>
         <div className="text-zinc-500 text-sm">No recent topics available.</div>
       </div>
-
-      {/* 4. Instantiate the component node portal at the top level layout hierarchy */}
       <CreatePostModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
