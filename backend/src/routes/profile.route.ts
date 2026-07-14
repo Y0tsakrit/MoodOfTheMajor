@@ -4,7 +4,7 @@ import { verifyToken } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.put('/:profileId', verifyToken, updateProfile);
+router.put('/update', verifyToken, updateProfile);
 router.get('/search', verifyToken, getProfile);
 
 export default router;

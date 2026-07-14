@@ -28,6 +28,20 @@ export const verifyToken = async (req: Request,res: Response,next: NextFunction)
                 message: "Invalid or expired token",
             });
         }
+
+        const payload = decoded as {
+            userId: string;
+            email: string;
+            profileId: string;
+            isAdmin: boolean;
+        };
+
+        (req as Request & { user?: { id: string; email: string; profileId: string; isAdmin: boolean } }).user = {
+        id: payload.userId,
+        email: payload.email,
+        profileId: payload.profileId,
+        isAdmin: payload.isAdmin
+        };
         
         next();
     } catch (error) {

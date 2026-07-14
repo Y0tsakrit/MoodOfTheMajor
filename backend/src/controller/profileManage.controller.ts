@@ -2,13 +2,19 @@ import departmentManageService from "../service/departmentManage.service";
 import ProfileManageService from "../service/profileManage.service";
 import { DepartmentCreateDTO } from '../interface/createDepartmentDTO.interface';
 import { Request, Response } from 'express';
+
+type AuthRequest = Request & { user?: { profileId?: string; isAdmin?: boolean } };
 import jsonwebtoken from 'jsonwebtoken';
 
 const profileManageService = new ProfileManageService();
 const departmentService = new departmentManageService();
 
-export const updateProfile = async (req: Request, res: Response) => {
-    const profileId = req.params.profileId as string;
+export const updateProfile = async (req: AuthRequest, res: Response) => {
+    const profileId = req.user?.profileId;
+    
+    if (!profileId) {
+        return res.status(401).json({ error: "Unauthorized: Missing profile identifier in session token" });
+    }
     const data = req.body;
     try {
 
@@ -33,7 +39,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     }
 };
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getProfile = async (req: AuthRequest, res: Response) => {
     let criteria: any = {};
 
     const hasQueryParams = Object.keys(req.query).length > 0;

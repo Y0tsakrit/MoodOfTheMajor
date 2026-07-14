@@ -21,12 +21,10 @@ export default class PostManagementService {
         this.profileRepository = profileRepository;
     }
 
-    async createPost(token: string, postData: PostCreateDTO) {
-        const tokenData: TokenData = extractDataFromToken(token);
-
+    async createPost(profileId: string, postData: PostCreateDTO) {
         const payload: PostCreateCriteria = {
             ...postData,
-            authorId: tokenData.profileId,
+            authorId: profileId,
         };
 
         try {
@@ -37,8 +35,7 @@ export default class PostManagementService {
         }
     }
 
-    async updatePost(token: string, postId: string, postData: PostCreateDTO) {
-        const tokenData: TokenData = extractDataFromToken(token);
+    async updatePost(tokenData: TokenData, postId: string, postData: PostCreateDTO) {
 
         const existingPost = await this.postRepository.SearchByCriteria({ id: postId });
         if (existingPost.length === 0 || !existingPost[0]) {
@@ -61,8 +58,7 @@ export default class PostManagementService {
         }
     }
 
-    async deletePost(token: string, postId: string) {
-        const tokenData: TokenData = extractDataFromToken(token);
+    async deletePost(tokenData: TokenData, postId: string) {
 
         const existingPost = await this.postRepository.SearchByCriteria({ id: postId });
         if (existingPost.length === 0 || !existingPost[0]) {
@@ -174,13 +170,4 @@ export default class PostManagementService {
         }
     }
 
-}
-
-const extractDataFromToken = (token: string) => {
-    try {
-        const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET as string);
-        return decodedToken as TokenData;
-    }catch (error) {
-        throw new Error('Invalid token');
-    }
 }
