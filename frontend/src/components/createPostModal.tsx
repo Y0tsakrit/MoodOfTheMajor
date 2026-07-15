@@ -33,7 +33,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
   };
 
   return (
-    <div className="z-50 fixed inset-0 flex justify-center items-center p-4">
+    <div className="z-100 fixed inset-0 flex justify-center items-center p-4">
       <div 
         className="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity" 
         onClick={onClose}

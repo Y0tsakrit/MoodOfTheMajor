@@ -59,7 +59,9 @@ function HomePage() {
       <PostList 
         posts={posts} 
         fetchMorePosts={fetchNextPage} 
-        hasMore={!!hasNextPage} 
+        hasMore={!!hasNextPage}
+        enableEdit={false} 
+        enableDelete={false} 
       />
       
       <div className="hidden lg:block p-6 border-zinc-800 border-l">

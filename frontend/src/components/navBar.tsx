@@ -74,7 +74,6 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
       initial: data?.firstName ? data.firstName.charAt(0).toUpperCase() : 'F'
     };
 
-    // Added explicit path properties to the navigation configuration array
     const navItems = [
       { icon: Home, label: 'Home', active: true, path: '/' },
       { icon: Search, label: 'Explore', active: false, path: '/explore' },

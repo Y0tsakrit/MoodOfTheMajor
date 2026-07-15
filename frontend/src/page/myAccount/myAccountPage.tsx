@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import NavBar from '../../components/navBar';
 import PostList from '../../components/postList';
-import { getProfile, getPost } from './action';
+import { getProfile, getPost, deletePost } from './action';
 import { useAuth } from "../../components/authContext";
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import Notification from '../../components/notification';
 
 function MyAccount() {
     const { accessToken } = useAuth();
+    const queryClient = useQueryClient();
 
     const [notification, setNotification] = useState<{
         show: boolean;
@@ -39,6 +40,25 @@ function MyAccount() {
     });
 
     const posts = postPages ? postPages.pages.flatMap((page) => page.data) : [];
+
+    const handleDeletePost = async (postId: string) => {
+        try{
+            await deletePost(postId, accessToken!)
+        } catch (error) {
+            setNotification({
+                show: true,
+                message: 'Failed to delete post.',
+                type: 'error',
+            });
+        }finally {
+            setNotification({
+                show: true,
+                message: 'Post deleted successfully.',
+                type: 'success',
+            });
+            queryClient.invalidateQueries({ queryKey: ['posts', accessToken, profileId] });
+        }
+    }
 
     if (isLoading) {
         return <div className="flex justify-center items-center bg-[#0d0e15] min-h-screen text-zinc-400">Loading Dashboard...</div>;
@@ -98,6 +118,9 @@ function MyAccount() {
                         posts={posts} 
                         fetchMorePosts={fetchNextPage} 
                         hasMore={!!hasNextPage} 
+                        onDelete={(postId) => handleDeletePost(postId)}
+                        enableEdit={true}
+                        enableDelete={true}
                     />
                 </div>
 
