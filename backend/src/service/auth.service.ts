@@ -32,14 +32,21 @@ export default class AuthService {
             major: data.profileData.departmentName 
         });
 
-        if (!existingDepartment[0]) {
-            throw new Error("Department not found");
+        let department = existingDepartment[0];
+
+        if (!department) {
+            department = await this.departmentRepository.CreateDepartment({
+                faculty: data.profileData.faculty.toLowerCase(),
+                major: data.profileData.departmentName.toLowerCase(),
+                CreatedAt: new Date(),
+                UpdatedAt: new Date()
+            });
         }
 
         const profile = await this.profileRepository.CreateProfile({
             firstName: data.profileData.firstName,
             lastName: data.profileData.lastName,
-            departmentId: existingDepartment[0].id,
+            departmentId: department.id,
             year: data.profileData.year
         });
 

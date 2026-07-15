@@ -25,13 +25,32 @@ export default class ProfileManageService {
         throw new Error("Profile not found");
     }
 
+    let department = profile[0].departmentId;
+
+    if (data.faculty || data.major) {
+        const existingDepartment = await this.departmentRepository.SearchByCriteria({
+            faculty: data.faculty ? data.faculty.toLowerCase() : profile[0].departmentId,
+            major: data.major ? data.major.toLowerCase() : profile[0].departmentId
+        });
+
+        if (!existingDepartment[0]) {
+            const newDepartment = await this.departmentRepository.CreateDepartment({
+                faculty: data.faculty ? data.faculty.toLowerCase() : profile[0].departmentId,
+                major: data.major ? data.major.toLowerCase() : profile[0].departmentId,
+                CreatedAt: new Date(),
+                UpdatedAt: new Date()
+            });
+            department = newDepartment.id;
+        }
+    }
+
     const updatedProfileData: ProfileUpdateCriteria = {
         firstName: data.firstName || profile[0].firstName,
         lastName: data.lastName || profile[0].lastName,
-        departmentId: data.departmentId !== null && data.departmentId !== undefined ? data.departmentId : profile[0].departmentId,
+        departmentId: department,
         year: data.year ? data.year : profile[0].year,
         updatedAt: new Date(),
-};
+    };
         await this.profileRepository.UpdateProfile(profileId, updatedProfileData);
     }
 

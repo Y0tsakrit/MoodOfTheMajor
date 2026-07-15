@@ -1,6 +1,7 @@
 export interface UpdateProfileDTO {
     firstName?: string;
     lastName?: string;
-    departmentId?: string;
+    faculty?: string;
+    major?: string;
     year?: string;
 }
