@@ -8,6 +8,7 @@ import PrivateRoute from './components/privateRoute';
 import HomePage from './page/home/homePage';
 import MyAccount from './page/myAccount/myAccountPage';
 import SettingPage from './page/setting/settingPage';
+import ExplorePage from './page/explore/explorePage';
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,14 @@ function AppRoutes() {
           element={
             <PrivateRoute>
               <SettingPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/explore" 
+          element={
+            <PrivateRoute>
+              <ExplorePage />
             </PrivateRoute>
           } 
         />

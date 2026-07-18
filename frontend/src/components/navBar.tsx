@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Search, Shield, Smile, LogOut, Settings } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // Added useLocation
 import CreatePostModal from './createPostModal'; 
 import { createPost } from '../page/home/action'; 
 import { useAuth } from "../components/authContext";
@@ -21,15 +21,17 @@ interface NavBarProps {
       UpdatedAt: string;
     };
   } | null;
-  onPostStatus: (status: { show: boolean; message: string; type: 'success' | 'error' }) => void;
+  onPostStatus: (status: { show: boolean; message: string; type: 'success' | 'error'; }) => void;
 }
 
 function NavBar({ data, onPostStatus }: NavBarProps) {
     const { accessToken, setAccessToken } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const queryClient = useQueryClient();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { isAdmin } = useAuth();
 
     useEffect(() => {
       if (typeof window === 'undefined') return;
@@ -47,7 +49,7 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
     };
 
     const mutation = useMutation({
-      mutationFn: (formData: { title: string; content: string; mood: string; isAnonymous: boolean }) => 
+      mutationFn: (formData: { title: string; content: string; mood: string; isAnonymous: boolean; }) => 
         createPost(formData, accessToken!),
       onSuccess: () => {
         onPostStatus({
@@ -75,10 +77,10 @@ function NavBar({ data, onPostStatus }: NavBarProps) {
     };
 
     const navItems = [
-      { icon: Home, label: 'Home', active: true, path: '/' },
-      { icon: Search, label: 'Explore', active: false, path: '/explore' },
-      ...(data?.isAdmin ? [{ icon: Shield, label: 'Moderation', active: false, path: '/moderation' }] : []),
-      { icon: Settings, label: 'Settings', active: false, path: '/settings' },
+      { icon: Home, label: 'Home', active: location.pathname === '/', path: '/' },
+      { icon: Search, label: 'Explore', active: location.pathname === '/explore', path: '/explore' },
+      ...(isAdmin ? [{ icon: Shield, label: 'Moderation', active: location.pathname === '/moderation', path: '/moderation' }] : []),
+      { icon: Settings, label: 'Settings', active: location.pathname === '/settings', path: '/settings' },
     ];
 
     return (
