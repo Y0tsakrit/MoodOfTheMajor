@@ -98,7 +98,6 @@ const getDepartmentOrCreate = async (criteria: DepartmentCreateDTO, res: Respons
     }
 
     try {
-        // Safe case normalization to ensure matching across search queries
         const searchCriteria = {
             faculty: criteria.faculty.toLowerCase(),
             major: criteria.major.toLowerCase()

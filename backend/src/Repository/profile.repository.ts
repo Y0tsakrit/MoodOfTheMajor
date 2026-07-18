@@ -3,9 +3,7 @@ import { ProfileCreateCriteria } from '../interface/profileCreateCriteria.interf
 import { ProfileSearchCriteria } from '../interface/profileSearchCriteria.interface';
 import { ProfileUpdateCriteria } from '../interface/profileUpdateCriteria.interface';
 
-
 const prisma = new PrismaClient();
-
 
 export const profileRepository = {
     async CreateProfile(data: ProfileCreateCriteria) {
@@ -15,7 +13,6 @@ export const profileRepository = {
     },
 
     async SearchByCriteria(filter: ProfileSearchCriteria) {
-
         const whereClause: any = {};
 
         if (filter.id) {
@@ -29,7 +26,7 @@ export const profileRepository = {
             };
         }
 
-       if (filter.lastName) {
+        if (filter.lastName) {
             whereClause.lastName = {
                 contains: filter.lastName,
                 mode: 'insensitive'
@@ -49,6 +46,9 @@ export const profileRepository = {
 
         return await prisma.profile.findMany({
             where: whereClause,
+            include: {
+                Department: true
+            },
             orderBy: {
                 UpdatedAt: 'desc'
             },
@@ -58,8 +58,7 @@ export const profileRepository = {
     },
 
     async UpdateProfile(id: string, data: ProfileUpdateCriteria) {
-
-        const { departmentId, updatedAt, ...profileData } = data;
+        const { departmentId, updatedAt, ...profileData } = data as any;
 
         const prismaData = {
             ...profileData,
@@ -82,4 +81,4 @@ export const profileRepository = {
             data: prismaData
         });
     },
-}
+};
