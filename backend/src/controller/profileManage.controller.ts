@@ -17,18 +17,40 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
     }
     const data = req.body;
     try {
+        let resolvedDepartmentId: string | undefined = undefined;
 
-        if(data.faculty || data.major) {
-            const departmentId = await getDepartmentOrCreate({
-                faculty: data.faculty,
-                major: data.major,
+        if (data.faculty || data.major) {
+            let targetFaculty = data.faculty;
+            let targetMajor = data.major;
+
+            if (!targetFaculty || !targetMajor) {
+                const currentProfile = await profileManageService.getProfile({ id: profileId });
+                if (!currentProfile || !currentProfile[0]) {
+                    return res.status(404).json({ error: "Profile not found" });
+                }
+
+                const deptData = currentProfile[0].department;
+
+                if (!targetFaculty) targetFaculty = deptData?.faculty || "";
+                if (!targetMajor) targetMajor = deptData?.major || "";
+            }
+
+            const fetchedId = await getDepartmentOrCreate({
+                faculty: targetFaculty,
+                major: targetMajor,
             }, res);
 
-        if (!departmentId) return;
-        data.departmentId = departmentId;
+            if (!fetchedId) return;
+            resolvedDepartmentId = fetchedId;
         }
 
-        const updateData = { ...data};
+        const updateData = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            year: data.year,
+            password: data.password,
+            ...(resolvedDepartmentId && { departmentId: resolvedDepartmentId }) 
+        };
 
         await profileManageService.updateProfile(profileId, updateData);
         res.status(200).json({ message: "Profile updated successfully" });
@@ -76,12 +98,17 @@ const getDepartmentOrCreate = async (criteria: DepartmentCreateDTO, res: Respons
     }
 
     try {
-        let departments = await departmentService.getDepartment(criteria);
-        
+        // Safe case normalization to ensure matching across search queries
+        const searchCriteria = {
+            faculty: criteria.faculty.toLowerCase(),
+            major: criteria.major.toLowerCase()
+        };
+
+        let departments = await departmentService.getDepartment(searchCriteria);
         let department = Array.isArray(departments) ? departments[0] : departments;
         
         if (!department) {
-            department = await departmentService.createDepartment(criteria);
+            department = await departmentService.createDepartment(searchCriteria);
         }
         
         return department.id; 
