@@ -47,8 +47,6 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
         const updateData = {
             firstName: data.firstName,
             lastName: data.lastName,
-            year: data.year,
-            password: data.password,
             ...(resolvedDepartmentId && { departmentId: resolvedDepartmentId }) 
         };
 

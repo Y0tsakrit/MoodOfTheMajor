@@ -27,27 +27,10 @@ export default class ProfileManageService {
 
     let department = profile[0].departmentId;
 
-    if (data.faculty || data.major) {
-        const existingDepartment = await this.departmentRepository.SearchByCriteria({
-            faculty: data.faculty ? data.faculty.toLowerCase() : profile[0].departmentId,
-            major: data.major ? data.major.toLowerCase() : profile[0].departmentId
-        });
-
-        if (!existingDepartment[0]) {
-            const newDepartment = await this.departmentRepository.CreateDepartment({
-                faculty: data.faculty ? data.faculty.toLowerCase() : profile[0].departmentId,
-                major: data.major ? data.major.toLowerCase() : profile[0].departmentId,
-                CreatedAt: new Date(),
-                UpdatedAt: new Date()
-            });
-            department = newDepartment.id;
-        }
-    }
-
     const updatedProfileData: ProfileUpdateCriteria = {
         firstName: data.firstName || profile[0].firstName,
         lastName: data.lastName || profile[0].lastName,
-        departmentId: department,
+        departmentId: data.departmentId || department,
         year: data.year ? data.year : profile[0].year,
         updatedAt: new Date(),
     };
