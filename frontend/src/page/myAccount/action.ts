@@ -67,3 +67,18 @@ export const deletePost = async (postId: string, token: string) => {
     throw error;
   }
 };
+
+export const updatePost = async (postId: string, postData: Partial<CreatePostDTO>, token: string) => {
+  try {
+    const config: any = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.put(`/post/update/${postId}`, postData, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+};

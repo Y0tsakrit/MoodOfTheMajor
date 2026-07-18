@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import NavBar from '../../components/navBar';
 import PostList from '../../components/postList';
-import { getProfile, getPost, deletePost } from './action';
+import CreatePostModal from '../../components/createPostModal'; // Import modal
+import { getProfile, getPost, deletePost, updatePost } from './action'
 import { useAuth } from "../../components/authContext";
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import Notification from '../../components/notification';
 
+interface PostFormData {
+  title: string;
+  content: string;
+  mood: string;
+  isAnonymous: boolean;
+}
+
 function MyAccount() {
     const { accessToken } = useAuth();
     const queryClient = useQueryClient();
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingPost, setEditingPost] = useState<any>(null);
 
     const [notification, setNotification] = useState<{
         show: boolean;
@@ -41,24 +52,59 @@ function MyAccount() {
 
     const posts = postPages ? postPages.pages.flatMap((page) => page.data) : [];
 
-    const handleDeletePost = async (postId: string) => {
-        try{
-            await deletePost(postId, accessToken!)
+    const handleEditClick = (postId: string) => {
+        const targetPost = posts.find((p) => p.postId === postId);
+        if (targetPost) {
+            setEditingPost(targetPost);
+            setIsEditModalOpen(true);
+        }
+    };
+
+    const handleUpdatePost = async (formData: PostFormData) => {
+        if (!editingPost) return;
+        try {
+            await updatePost(
+                editingPost.postId,
+                {
+                    title: formData.title,
+                    content: formData.content,
+                    mood: formData.mood,
+                    isAnonymous: formData.isAnonymous,
+                },
+                accessToken!
+            );
+            setNotification({
+                show: true,
+                message: 'Post updated successfully.',
+                type: 'success',
+            });
+            queryClient.invalidateQueries({ queryKey: ['posts', accessToken, profileId] });
         } catch (error) {
             setNotification({
                 show: true,
-                message: 'Failed to delete post.',
+                message: 'Failed to update post.',
                 type: 'error',
             });
-        }finally {
+        }
+    };
+
+    const handleDeletePost = async (postId: string) => {
+        try{
+            await deletePost(postId, accessToken!)
             setNotification({
                 show: true,
                 message: 'Post deleted successfully.',
                 type: 'success',
             });
             queryClient.invalidateQueries({ queryKey: ['posts', accessToken, profileId] });
+        } catch (error) {
+            setNotification({
+                show: true,
+                message: 'Failed to delete post.',
+                type: 'error',
+            });
         }
-    }
+    };
 
     if (isLoading) {
         return <div className="flex justify-center items-center bg-[#0d0e15] min-h-screen text-zinc-400">Loading Dashboard...</div>;
@@ -76,6 +122,20 @@ function MyAccount() {
                     onClose={() => setNotification((prev) => ({ ...prev, show: false }))}
                 />
             )}
+            <CreatePostModal 
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setEditingPost(null);
+                }}
+                onSubmit={handleUpdatePost}
+                initialData={editingPost ? {
+                    title: editingPost.postTitle,
+                    content: editingPost.postContent,
+                    mood: editingPost.postMood,
+                    isAnonymous: false
+                } : undefined}
+            />
 
             <NavBar 
                 data={userProfile} 
@@ -118,7 +178,8 @@ function MyAccount() {
                         posts={posts} 
                         fetchMorePosts={fetchNextPage} 
                         hasMore={!!hasNextPage} 
-                        onDelete={(postId) => handleDeletePost(postId)}
+                        onEdit={handleEditClick}
+                        onDelete={handleDeletePost}
                         enableEdit={true}
                         enableDelete={true}
                     />

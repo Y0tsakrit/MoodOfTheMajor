@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Smile } from 'lucide-react';
+
+interface PostFormData {
+  title: string;
+  content: string;
+  mood: string;
+  isAnonymous: boolean;
+}
 
 interface CreatePostModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: { title: string; content: string; mood: string; isAnonymous: boolean }) => void;
+  onSubmit: (formData: PostFormData) => void;
+  initialData?: PostFormData;
 }
 
-export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePostModalProps) {
+export default function CreatePostModal({ isOpen, onClose, onSubmit, initialData }: CreatePostModalProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('Happy');
   const [isAnonymous, setIsAnonymous] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title);
+      setContent(initialData.content);
+      setMood(initialData.mood);
+      setIsAnonymous(initialData.isAnonymous);
+    } else {
+      setTitle('');
+      setContent('');
+      setMood('Happy');
+      setIsAnonymous(false);
+    }
+  }, [initialData, isOpen]);
 
   const moods = [
     { label: 'Happy', color: 'bg-zinc-900 text-zinc-100 border-zinc-700' },
@@ -25,15 +47,11 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ title, content, mood, isAnonymous });
-    setTitle('');
-    setContent('');
-    setMood('Happy');
-    setIsAnonymous(false);
     onClose();
   };
 
   return (
-    <div className="z-100 fixed inset-0 flex justify-center items-center p-4">
+    <div className="z-50 fixed inset-0 flex justify-center items-center p-4">
       <div 
         className="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity" 
         onClick={onClose}
@@ -44,7 +62,9 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
         <div className="flex justify-between items-center pb-3 border-zinc-900 border-b">
           <div className="flex items-center gap-2">
             <Smile className="text-zinc-400" size={22} />
-            <h2 className="font-bold text-zinc-100 text-xl">Share Your Mood</h2>
+            <h2 className="font-bold text-zinc-100 text-xl">
+              {initialData ? 'Edit Your Post' : 'Share Your Mood'}
+            </h2>
           </div>
           <button 
             onClick={onClose}
@@ -64,7 +84,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="What's on your mind?"
-              className="bg-[#0d0e15] px-4 py-3 border border-zinc-900 focus:border-zinc-700 rounded-xl focus:outline-none w-full text-white text-sm transition-colors placeholder-zinc-650"
+              className="bg-[#0d0e15] px-4 py-3 border border-zinc-900 focus:border-zinc-700 rounded-xl focus:outline-none w-full text-white text-sm transition-colors placeholder-zinc-600"
             />
           </div>
 
@@ -76,7 +96,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Express yourself here..."
-              className="bg-[#0d0e15] px-4 py-3 border border-zinc-900 focus:border-zinc-700 rounded-xl focus:outline-none w-full text-white text-sm transition-colors resize-none placeholder-zinc-650"
+              className="bg-[#0d0e15] px-4 py-3 border border-zinc-900 focus:border-zinc-700 rounded-xl focus:outline-none w-full text-white text-sm transition-colors resize-none placeholder-zinc-600"
             />
           </div>
 
@@ -128,7 +148,7 @@ export default function CreatePostModal({ isOpen, onClose, onSubmit }: CreatePos
               type="submit"
               className="bg-zinc-200 hover:bg-zinc-100 shadow-xl px-5 py-2.5 rounded-xl font-semibold text-zinc-950 text-sm transition-colors"
             >
-              Publish Post
+              {initialData ? 'Save Changes' : 'Publish Post'}
             </button>
           </div>
 

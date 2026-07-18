@@ -159,6 +159,7 @@ function RegisterPage() {
             <div className='flex justify-between gap-3 mb-4 w-full'>
                 <div className='w-1/2'>
                 <SearchDropdown 
+                    value={selectedFacultyValue ?? ''}
                     placeholder='Search or select a faculty...' 
                     options={faculties} 
                     onChange={handleFacultyChange} 
@@ -167,6 +168,7 @@ function RegisterPage() {
                 </div>
                 <div className='w-1/2'>
                 <SearchDropdown 
+                    value={''}
                     placeholder={loadingMajors ? 'Loading...' : 'Search or select a major...'} 
                     options={majors} 
                     onChange={handleMajorChange}
