@@ -11,7 +11,6 @@ type ProfileFormData = {
     lastName: string;
     faculty: string;
     major: string;
-    password: string;
 };
 
 interface DepartmentItem {
@@ -41,7 +40,6 @@ function SettingPage() {
         lastName: '',
         faculty: '',
         major: '',
-        password: '',
     });
 
     const [facultySearch, setFacultySearch] = useState('');
@@ -76,7 +74,6 @@ function SettingPage() {
                 lastName: user.lastName || '',
                 faculty: initialFaculty,
                 major: initialMajor,
-                password: '',
             });
             
             setFacultySearch(initialFaculty);
@@ -205,18 +202,6 @@ function SettingPage() {
                             onChange={handleMajorChange}
                             onSearchChange={setMajorSearch}
                             disabled={!formData.faculty}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 font-medium text-sm">New Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Leave blank to keep current password"
-                            className="bg-[#1a1c26] p-2 border border-[#2d3142] focus:border-blue-500 rounded focus:outline-none w-full text-white"
                         />
                     </div>
 
