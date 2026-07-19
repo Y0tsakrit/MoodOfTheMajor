@@ -135,7 +135,7 @@ export default class PostManagementService {
             }
 
             if (post[0].authorId !== tokenData.profileId) {
-                const user = await this.userRepository.SearchByCriteria({ id: tokenData.userId });
+                const user = await this.userRepository.SearchByCriteria({ profileId: tokenData.profileId });
 
                 if (user[0]?.isAdmin !== true) {
                     throw new Error('Unauthorized to update this post');
