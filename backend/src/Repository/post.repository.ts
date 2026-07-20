@@ -14,9 +14,7 @@ export const postRepository = {
     },
 
     async SearchByCriteria(filter: PostSearchCriteria) {
-
         const whereClause: any = {};
-
         whereClause.isDeleted = false;
 
         if (filter.id) {
@@ -61,14 +59,21 @@ export const postRepository = {
         const page = Number(filter.page) || 1;
         const limit = Number(filter.limit) || 10;
 
-        return await prisma.post.findMany({
-            where: whereClause,
-            orderBy: {
-                UpdatedAt: 'desc'
-            },
-            skip: (page - 1) * limit,
-            take: limit
-        });
+        const [posts, totalMatchingPosts] = await Promise.all([
+            prisma.post.findMany({
+                where: whereClause,
+                orderBy: {
+                    UpdatedAt: 'desc'
+                },
+                skip: (page - 1) * limit,
+                take: limit
+            }),
+            prisma.post.count({
+                where: whereClause
+            })
+        ]);
+
+        return { posts, totalMatchingPosts };
     },
 
     async UpdatePost(id: string, data: PostUpdateCriteria) {
