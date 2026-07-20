@@ -46,6 +46,17 @@ export const postRepository = {
         if (filter.isAnonymous !== undefined) {
             whereClause.isAnonymous = filter.isAnonymous;
         }
+        if (filter.fromDate || filter.toDate) {
+            whereClause.CreatedAt = {};
+
+            if (filter.fromDate) {
+                whereClause.CreatedAt.gte = new Date(filter.fromDate);
+            }
+
+            if (filter.toDate) {
+                whereClause.CreatedAt.lte = new Date(filter.toDate);
+            }
+        }
 
         const page = Number(filter.page) || 1;
         const limit = Number(filter.limit) || 10;
