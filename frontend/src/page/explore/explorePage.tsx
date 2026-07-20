@@ -29,13 +29,12 @@ function ExplorePage() {
     });
 
     const { data: postPages, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
-        // Combined keyword search parameters under a single state key to query both simultaneously
         queryKey: ['posts', 'explore', searchKeyword, selectedMood, accessToken],
         queryFn: ({ pageParam = 1 }) => {
             return getPost({ 
                 page: pageParam, 
                 limit: 10,
-                title:undefined,
+                title: undefined,
                 content: searchKeyword || undefined,
                 mood: selectedMood || undefined
             }, accessToken!);
@@ -65,7 +64,7 @@ function ExplorePage() {
     };
 
     return (
-        <div className="relative flex md:grid md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr_350px] bg-[#0d0e15] w-full min-h-screen overflow-hidden text-white">
+        <div className="relative flex md:grid md:grid-cols-[auto_1fr] bg-[#0d0e15] w-full min-h-screen overflow-hidden text-white">
             
             {notification.show && (
                 <div className="top-4 right-4 z-50 absolute min-w-[300px]">
@@ -135,11 +134,6 @@ function ExplorePage() {
                         />
                     )}
                 </div>
-            </div>
-
-            <div className="hidden lg:block p-6 border-zinc-800 border-l">
-                <h3 className="mb-4 font-bold text-zinc-400 text-xs uppercase tracking-wider">Trending Topics</h3>
-                <div className="text-zinc-500 text-sm">No recent topics available.</div>
             </div>
         </div>
     );
