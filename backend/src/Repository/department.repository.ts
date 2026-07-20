@@ -1,28 +1,47 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 import { DepartmentCreateCriteria } from '../interface/departmentCreateCriteria.interface';
-
+import { DepartmentSearchCriteria } from '../interface/departmentSearchCriteria.interface';
 const prisma = new PrismaClient();
 
 
-const departmentRepository = {
+export const departmentRepository = {
     async CreateDepartment(data: DepartmentCreateCriteria) {
         return await prisma.department.create({
             data: data
         });
     },
 
-    async SearchByCriteria(filter: any) {
-        return await prisma.department.findMany({
-            where: filter
-        });
-    },
+    async SearchByCriteria(filter: DepartmentSearchCriteria) {
+        const whereClause: any = {};
 
-    async UpdateDepartment(id: string, data: any) {
-        return await prisma.department.update({
-            where: {
-                id: id
+        if (filter.id) {
+            whereClause.id = filter.id;
+        }
+
+        if (filter.faculty) {
+            whereClause.faculty = {
+                contains: filter.faculty,
+                mode: 'insensitive'
+            };
+        }
+
+        if (filter.major) {
+            whereClause.major = {
+                contains: filter.major,
+                mode: 'insensitive'
+            };
+        }
+
+        const page = Number(filter.page) || 1;
+        const limit = Number(filter.limit) || 10;
+        
+        return await prisma.department.findMany({
+            where: whereClause,
+            orderBy: {
+                UpdatedAt: 'desc'
             },
-            data: data
+            skip: (page - 1) * limit,
+            take: limit
         });
     },
 }

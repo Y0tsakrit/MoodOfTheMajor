@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 import { ProfileCreateCriteria } from '../interface/profileCreateCriteria.interface';
 import { ProfileSearchCriteria } from '../interface/profileSearchCriteria.interface';
 import { ProfileUpdateCriteria } from '../interface/profileUpdateCriteria.interface';
 
-
 const prisma = new PrismaClient();
-
 
 export const profileRepository = {
     async CreateProfile(data: ProfileCreateCriteria) {
@@ -15,7 +13,6 @@ export const profileRepository = {
     },
 
     async SearchByCriteria(filter: ProfileSearchCriteria) {
-
         const whereClause: any = {};
 
         if (filter.id) {
@@ -23,11 +20,17 @@ export const profileRepository = {
         }
 
         if (filter.firstName) {
-            whereClause.firstName = filter.firstName;
+            whereClause.firstName = {
+                contains: filter.firstName,
+                mode: 'insensitive'
+            };
         }
 
         if (filter.lastName) {
-            whereClause.lastName = filter.lastName;
+            whereClause.lastName = {
+                contains: filter.lastName,
+                mode: 'insensitive'
+            };
         }
 
         if (filter.departmentId) {
@@ -38,21 +41,44 @@ export const profileRepository = {
             whereClause.year = filter.year;
         }
 
-        whereClause.page = filter.page;
-        whereClause.limit = filter.limit;
+        const page = Number(filter.page) || 1;
+        const limit = Number(filter.limit) || 10;
 
         return await prisma.profile.findMany({
-            where: whereClause
+            where: whereClause,
+            include: {
+                Department: true
+            },
+            orderBy: {
+                UpdatedAt: 'desc'
+            },
+            skip: (page - 1) * limit,
+            take: limit
         });
     },
 
     async UpdateProfile(id: string, data: ProfileUpdateCriteria) {
+        const { departmentId, updatedAt, ...profileData } = data as any;
+
+        const prismaData = {
+            ...profileData,
+            ...(departmentId ? {
+                Department: {
+                    connect: {
+                        id: departmentId
+                    }
+                }
+            } : {}),
+            ...(updatedAt ? {
+                UpdatedAt: updatedAt
+            } : {}),
+        };
 
         return await prisma.profile.update({
             where: {
                 id: id
             },
-            data: data
+            data: prismaData
         });
     },
-}
+};

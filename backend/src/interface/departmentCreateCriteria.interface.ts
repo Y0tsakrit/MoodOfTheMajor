@@ -1,6 +1,6 @@
 export interface DepartmentCreateCriteria {
-    faculty: string;
-    major: string;
-    createdAt: Date;
-    updatedAt: Date;
+    "faculty": string;
+    "major": string;
+    "CreatedAt": Date;
+    "UpdatedAt": Date;
 }
