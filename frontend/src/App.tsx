@@ -79,13 +79,13 @@ function AppRoutes() {
             </PrivateRoute>
           } 
         />
-        <Route
-          path="/moderation"
+        <Route 
+          path="/moderation" 
           element={
             <PrivateRoute>
               <ModerationPage />
             </PrivateRoute>
-          }
+          } 
         />
       </Routes>
     </BrowserRouter>

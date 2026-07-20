@@ -36,17 +36,19 @@ export const getPost = async (criteria: SearchPostDTO, token: string) => {
   }
 };
 
-export const deletePost = async (postId: string, token: string) => {
-  try {
+
+export const createPost = async (postData: CreatePostDTO, token: string) => {
+  try{
     const config: any = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await api.delete(`/post/delete/${postId}`, config);
+    const response = await api.post("/post/create", postData, config);
     return response.data;
-  } catch (error) {
-    console.error("Error deleting post:", error);
+  }catch (error) {
+    console.error("Error creating post:", error);
     throw error;
   }
-};
+
+}

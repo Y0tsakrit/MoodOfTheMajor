@@ -36,6 +36,23 @@ export const getPost = async (criteria: SearchPostDTO, token: string) => {
   }
 };
 
+
+export const createPost = async (postData: CreatePostDTO, token: string) => {
+  try{
+    const config: any = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.post("/post/create", postData, config);
+    return response.data;
+  }catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
+
+}
+
 export const deletePost = async (postId: string, token: string) => {
   try {
     const config: any = {
@@ -47,6 +64,21 @@ export const deletePost = async (postId: string, token: string) => {
     return response.data;
   } catch (error) {
     console.error("Error deleting post:", error);
+    throw error;
+  }
+};
+
+export const updatePost = async (postId: string, postData: Partial<CreatePostDTO>, token: string) => {
+  try {
+    const config: any = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await api.put(`/post/update/${postId}`, postData, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating post:", error);
     throw error;
   }
 };

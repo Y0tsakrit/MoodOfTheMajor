@@ -4,6 +4,6 @@ export interface ProfileSearchCriteria {
     "lastName"?: string | null;
     "departmentId"?: string | null;
     "year"?: string | null;
-    "page"?: Number | 1;
-    "limit"?: Number | 10;
+    "page"?: number | 1;
+    "limit"?: number | 10;
 }

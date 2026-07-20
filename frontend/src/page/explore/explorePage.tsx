@@ -34,7 +34,7 @@ function ExplorePage() {
             return getPost({ 
                 page: pageParam, 
                 limit: 10,
-                title:undefined,
+                title: undefined,
                 content: searchKeyword || undefined,
                 mood: selectedMood || undefined
             }, accessToken!);
@@ -64,10 +64,10 @@ function ExplorePage() {
     };
 
     return (
-        <div className="relative flex md:grid md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr] bg-[#0d0e15] w-full min-h-screen overflow-hidden text-white">
+        <div className="relative flex md:grid md:grid-cols-[auto_1fr] bg-[#0d0e15] w-full min-h-screen overflow-hidden text-white">
             
             {notification.show && (
-                <div className="top-4 right-4 z-50 absolute min-w-75">
+                <div className="top-4 right-4 z-50 absolute min-w-[300px]">
                     <Notification 
                         message={notification.message} 
                         type={notification.type} 
@@ -81,8 +81,8 @@ function ExplorePage() {
                 onPostStatus={setNotification}
             />
             
-            <div className="flex flex-col w-full h-screen overflow-x-hidden">
-                <div className="space-y-4 bg-[#0d0e15] p-6 border-zinc-900 border-b">
+            <div className="flex flex-col w-full h-screen overflow-y-auto">
+                <div className="top-0 z-10 sticky space-y-4 bg-[#0d0e15] p-6 border-zinc-900 border-b">
                     <h1 className="font-bold text-2xl">Explore Moods</h1>
                     
                     <div className="flex flex-col gap-4">
@@ -92,7 +92,7 @@ function ExplorePage() {
                                 placeholder="Search keywords in content..."
                                 value={searchKeyword}
                                 onChange={(e) => setSearchKeyword(e.target.value)}
-                                className="bg-[#1a1c26] p-2 border border-[#2d3142] focus:border-blue-500 rounded focus:outline-none w-full h-9.5 text-white text-sm placeholder-zinc-500"
+                                className="bg-[#1a1c26] p-2 border border-[#2d3142] focus:border-blue-500 rounded focus:outline-none w-full h-[38px] text-white text-sm placeholder-zinc-500"
                             />
                         </div>
 
@@ -106,7 +106,7 @@ function ExplorePage() {
                                             key={mood.value}
                                             type="button"
                                             onClick={() => handleMoodSelect(mood.value)}
-                                            className={`px-6 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 min-w-25 text-center ${
+                                            className={`px-6 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 min-w-[100px] text-center ${
                                                 isSelected 
                                                     ? 'bg-transparent border-zinc-400 text-white shadow-md' 
                                                     : 'bg-[#12131a] border-transparent text-zinc-500 hover:text-zinc-300 hover:bg-[#1a1c26]'
