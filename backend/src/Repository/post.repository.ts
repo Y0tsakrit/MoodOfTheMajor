@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import { PrismaClient } from '../../generated/prisma/client';
 import { PostCreateCriteria } from '../interface/postCreateCriteria.interface';
 import { PostSearchCriteria } from '../interface/postSearchCriteria.interface';
 import { PostUpdateCriteria } from '../interface/postUpdateCriteria.interface';
-=======
-import { PrismaClient } from '@prisma/client';
->>>>>>> origin/main
 
 const prisma = new PrismaClient();
 
@@ -95,10 +91,7 @@ export const postRepository = {
                 id: id
             },
             data: {
-<<<<<<< HEAD
                 isDeleted: true,
-=======
->>>>>>> origin/main
                 DeletedAt: new Date()
             }
         });
