@@ -7,4 +7,6 @@ export interface PostSearchCriteria {
     "isAnonymous"?: boolean;
     "page"?: number;
     "limit"?: number;
+    "fromDate"?: string | Date;
+    "toDate"?: string | Date;
 }

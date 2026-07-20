@@ -36,9 +36,9 @@ export default class PostManagementService {
     }
 
     async updatePost(tokenData: TokenData, postId: string, postData: PostCreateDTO) {
-
-        const existingPost = await this.postRepository.SearchByCriteria({ id: postId });
-        if (existingPost.length === 0 || !existingPost[0]) {
+        const { posts } = await this.postRepository.SearchByCriteria({ id: postId });
+        
+        if (posts.length === 0 || !posts[0]) {
             throw new Error('Post not found');
         }
 
@@ -46,7 +46,7 @@ export default class PostManagementService {
 
         const payload: PostCreateCriteria = {
             ...postData,
-            authorId: existingPost[0].authorId,
+            authorId: posts[0].authorId,
             UpdatedAt: new Date()
         };
 
@@ -60,8 +60,8 @@ export default class PostManagementService {
 
     async deletePost(tokenData: TokenData, postId: string) {
 
-        const existingPost = await this.postRepository.SearchByCriteria({ id: postId });
-        if (existingPost.length === 0 || !existingPost[0]) {
+        const { posts } = await this.postRepository.SearchByCriteria({ id: postId });
+        if (posts.length === 0 || !posts[0]) {
             throw new Error('Post not found');
         }
 
@@ -77,22 +77,23 @@ export default class PostManagementService {
 
     async getPost(SearchCriteria: PostSearchCriteria) {
         try {
-            const posts = await this.postRepository.SearchByCriteria(SearchCriteria);
+            const { posts, totalMatchingPosts } = await this.postRepository.SearchByCriteria(SearchCriteria);
             
-            const totalPosts = posts.length;
-            const isLastPage = SearchCriteria.page && SearchCriteria.limit ? (SearchCriteria.page * SearchCriteria.limit >= totalPosts) : (1 * 10 >= totalPosts);
+            const page = Number(SearchCriteria.page) || 1;
+            const limit = Number(SearchCriteria.limit) || 10;
+            
+            const isLastPage = (page * limit) >= totalMatchingPosts;
             
             if (posts.length === 0) {
                 return { 
                     data: [], 
-                    totalPosts, 
-                    isLastPage
+                    totalPosts: totalMatchingPosts, 
+                    isLastPage: true
                 };
             }
 
             const data = await Promise.all(
                 posts.map(async (post) => {
-    
                     const author = await this.fetchTheAuthorOfPost(post.authorId);
                     const department = await this.fetchTheDepartmentOfProfile(author.departmentId);
 
@@ -118,7 +119,7 @@ export default class PostManagementService {
 
             return {
                 data,
-                totalPosts,
+                totalPosts: totalMatchingPosts,
                 isLastPage
             };
         } catch (error) {
@@ -129,13 +130,13 @@ export default class PostManagementService {
     async verifyOwenerOrAdmin(tokenData: TokenData, postId: string) {
 
         try {
-            const post = await this.postRepository.SearchByCriteria({ id: postId });
-            if (post.length === 0 || !post[0]) {
+            const { posts } = await this.postRepository.SearchByCriteria({ id: postId });
+            if (posts.length === 0 || !posts[0]) {
                 throw new Error('Post not found');
             }
 
-            if (post[0].authorId !== tokenData.profileId) {
-                const user = await this.userRepository.SearchByCriteria({ id: tokenData.userId });
+            if (posts[0].authorId !== tokenData.profileId) {
+                const user = await this.userRepository.SearchByCriteria({ profileId: tokenData.profileId });
 
                 if (user[0]?.isAdmin !== true) {
                     throw new Error('Unauthorized to update this post');
