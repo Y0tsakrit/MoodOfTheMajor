@@ -1,7 +1,6 @@
 import api from "../../utils/api";
 import type { SearchProfileDTO } from "../../interface/searchProfileDTO";
 import type { SearchPostDTO } from "../../interface/searchPostDTO";
-import type { CreatePostDTO } from "../../interface/createPostDTO";
 
 export const getProfile = async (criteria: SearchProfileDTO = {}, token: string) => {
   try {

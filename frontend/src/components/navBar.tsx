@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Home, Search, Shield, Smile, LogOut, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom'; // Added useLocation
 import CreatePostModal from './createPostModal'; 

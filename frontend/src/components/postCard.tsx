@@ -1,5 +1,5 @@
 import { Trash, Pen, Check, X } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface Author {
   firstName?: string;
