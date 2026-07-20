@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBar from '../../components/navBar';
 import PostList from '../../components/postList';
-import CreatePostModal from '../../components/createPostModal'; // Import modal
+import CreatePostModal from '../../components/createPostModal'; 
 import { getProfile, getPost, deletePost, updatePost } from './action'
 import { useAuth } from "../../components/authContext";
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';

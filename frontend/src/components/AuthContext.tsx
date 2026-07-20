@@ -15,7 +15,7 @@ interface DecodedToken {
 interface AuthContextType {
   accessToken: string | null;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
-  isAdmin: boolean; // Added state exposure for consumer components
+  isAdmin: boolean;
   loading: boolean;
 }
 

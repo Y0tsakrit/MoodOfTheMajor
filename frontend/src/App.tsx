@@ -9,6 +9,7 @@ import HomePage from './page/home/homePage';
 import MyAccount from './page/myAccount/myAccountPage';
 import SettingPage from './page/setting/settingPage';
 import ExplorePage from './page/explore/explorePage';
+import ModerationPage from './page/moderation/moderationPage';
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,14 @@ function AppRoutes() {
           element={
             <PrivateRoute>
               <ExplorePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/moderation" 
+          element={
+            <PrivateRoute>
+              <ModerationPage />
             </PrivateRoute>
           } 
         />

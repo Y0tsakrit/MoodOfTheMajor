@@ -3,7 +3,7 @@ import { Home, Search, Shield, Smile, LogOut, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom'; // Added useLocation
 import CreatePostModal from './createPostModal'; 
 import { createPost } from '../page/home/action'; 
-import { useAuth } from "../components/authContext";
+import { useAuth } from "./authContext";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface NavBarProps {
